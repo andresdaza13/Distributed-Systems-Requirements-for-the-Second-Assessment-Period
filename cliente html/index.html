@@ -12,6 +12,28 @@
 <body>
     <h1>Transmisión de Audio con gRPC-Web </h1>
     <p>La conexión se intentará al servidor ubicado en localhost:8080</p>
+        <hr>
+    <h2>Catálogo de audios</h2>
+
+    <div>
+        <h3>1. Elige un tipo</h3>
+        <div id="lista-tipos"></div>
+    </div>
+
+    <div>
+        <h3 id="titulo-lista" style="display:none">2. Elige un audio</h3>
+        <ul id="lista-audios"></ul>
+    </div>
+
+    <div id="panel-detalle" style="display:none">
+        <h3>3. Detalle</h3>
+        <p id="detalle-titulo" style="font-weight:bold"></p>
+        <table id="detalle-metadatos" border="1" cellpadding="4"></table>
+        <button id="btn-reproducir">▶ Reproducir este audio</button>
+    </div>
+    <hr>
+    
+    
     <audio id="audio-player" controls style="display:none"></audio>
 
     <div>
@@ -32,6 +54,7 @@
     <div id="log"></div>
     <script src="./bundle.js"></script>
     <script src="./funciones.js"></script>
+    <script src="./catalogo.js"></script>
     
 </body>
 </html>
