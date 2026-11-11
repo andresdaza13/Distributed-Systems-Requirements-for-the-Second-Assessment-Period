@@ -1,0 +1,5 @@
+﻿cliente html/node_modules/
+servidor/canciones.log
+servidor/canciones/*
+!servidor/canciones/cancion1.mp3
+!servidor/canciones/cancion2.mp3
