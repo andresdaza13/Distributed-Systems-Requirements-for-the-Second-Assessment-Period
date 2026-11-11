@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>UniMusic — Administrador</title>
+<style>
+  :root {
+    --bg-main: #f5f5f7;
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --sidebar-bg: rgba(246, 246, 246, 0.85);
+    --text-primary: #1d1d1f;
+    --text-secondary: #86868b;
+    --apple-red: #fa233b;
+    --border-light: rgba(0, 0, 0, 0.08);
+    --radius-lg: 18px;
+    --radius-md: 12px;
+  }
+
+  * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", sans-serif;
+    background: var(--bg-main);
+    color: var(--text-primary);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Sidebar Lateral */
+  aside.sidebar {
+    width: 240px;
+    background: var(--sidebar-bg);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid var(--border-light);
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+  .logo { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; color: var(--text-primary); }
+  .logo span { color: var(--apple-red); }
+
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--apple-red);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+    transition: background 0.2s;
+  }
+  .sidebar-link:hover { background: rgba(0, 0, 0, 0.05); }
+
+  /* Main Wrapper */
+  .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+  
+  header {
+    height: 64px; padding: 0 32px; display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255,255,255,0.6); backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 10;
+    border-bottom: 1px solid var(--border-light);
+  }
+  header h1 { font-size: 18px; font-weight: 700; margin: 0; letter-spacing: -0.3px; }
+
+  .content-container { padding: 32px; max-width: 800px; margin: 0 auto; width: 100%; }
+
+  /* Card Formulario */
+  .section-card {
+    background: var(--card-bg); border-radius: var(--radius-lg); padding: 32px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid var(--border-light);
+    backdrop-filter: blur(20px);
+  }
+  
+  .form-group { margin-bottom: 20px; }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  input[type="text"], select {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    font-size: 14px;
+    color: var(--text-primary);
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  input[type="text"]:focus, select:focus {
+    background: #ffffff;
+    border-color: var(--apple-red);
+    box-shadow: 0 0 0 3px rgba(250, 35, 59, 0.15);
+  }
+
+  /* Estilo especial para Input File */
+  input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px dashed var(--border-light);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  /* Estilos agregados dinámicamente desde admin.js */
+  #campos-dinamicos input, #campos-dinamicos select {
+    margin-bottom: 16px;
+  }
+  #campos-dinamicos label {
+    margin-top: 12px;
+  }
+
+  /* Botón Principal */
+  button {
+    background: var(--apple-red);
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 12px 28px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(250, 35, 59, 0.3);
+    transition: transform 0.15s, filter 0.2s;
+    margin-top: 8px;
+  }
+  button:hover {
+    transform: scale(1.02);
+    filter: brightness(1.05);
+  }
+
+  /* Log de Resultado */
+  #resultado {
+    margin-top: 24px;
+    padding: 14px;
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    white-space: pre-wrap;
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 12.5px;
+    line-height: 1.5;
+    display: none; /* Se muestra cuando contiene texto */
+  }
+
+  #resultado:not(:empty) {
+    display: block;
+  }
+
+  .success { color: #34c759; font-weight: 600; }
+  .error { color: #ff3b30; font-weight: 600; }
+
+  @media (max-width: 768px) {
+    body { flex-direction: column; height: auto; overflow: auto; }
+    aside.sidebar { width: 100%; height: auto; }
+    .content-container { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo"><span>Music</span></div>
+  <a href="index.html" class="sidebar-link">← Volver al reproductor</a>
+</aside>
+
+<div class="main-wrapper">
+  <header>
+    <h1>Panel de Administración</h1>
+  </header>
+
+  <div class="content-container">
+    <section class="section-card">
+      <div class="form-group">
+        <label for="admin-tipo">Tipo de audio</label>
+        <select id="admin-tipo"></select>
+      </div>
+
+      <div class="form-group">
+        <label for="admin-titulo">Título</label>
+        <input id="admin-titulo" type="text" placeholder="Ej: Episodio 1" />
+      </div>
+
+      <div id="campos-dinamicos"></div>
+
+      <div class="form-group">
+        <label for="admin-archivo">Archivo de audio (.mp3)</label>
+        <input id="admin-archivo" type="file" accept="audio/*" />
+      </div>
+
+      <button onclick="registrarAudio()">Registrar audio</button>
+      
+      <div id="resultado"></div>
+    </section>
+  </div>
+</div>
+
+<script src="./admin.js"></script>
+</body>
+</html>
