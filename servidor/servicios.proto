@@ -1,6 +1,7 @@
 
 
-
+//contrato returns stream gragmentoCancio
+//el cliente pide una vez y el servidor retorna con muchos mensajes
 syntax = "proto3";
 
 package servicios;
